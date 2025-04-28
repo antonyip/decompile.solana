@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { default as axios } from 'axios';
+import { default as axios } from 'axios'
+import { default as bs58 } from 'bs58'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -13,6 +14,8 @@ function App() {
   const [tokenAddressTrigger, setTokenAddressTrigger] = useState("")
   const [programDump, setProgramDump] = useState("Decompiled Program appears here...")
   const [firstRun, setFirstRun] = useState(false)
+  const [flipsideAPIKey, setFlipsideAPIKey] = useState("")
+
 
   useEffect(() => {
     axios.get("https://decompile.solana.home.antonyip.com").then(resp => {
@@ -42,6 +45,46 @@ function App() {
     console.log(e.target.value)
   }
 
+  const updateFlipsideKey = (e: any) => {
+    setFlipsideAPIKey(e.target.value)
+  }
+
+  const uint8ArrayToHex = (uint8Array: Uint8Array)  => {
+    let hex = '';
+    for (const byte of uint8Array) {
+      hex += byte.toString(16).padStart(2, '0'); // Convert to 2-digit hex
+    }
+    return hex;
+  }
+
+  const convertBase58ToHex = (e: any) => {
+    const buffer = bs58.decode("2TDMjY92zstsN9CoCAhAbtPUwhCJNSnJdhDybThtdfFzFJjsy8pLBfcd6Nzyu")
+    const rv = uint8ArrayToHex(buffer)
+    console.log(rv)
+    return rv
+  }
+
+  // Convert hex string to Uint8Array
+  const hexToUint8Array = (hex: String) => {
+    // Remove any '0x' prefix if present
+    const cleanHex = hex.replace(/^0x/, '');
+    if (!/^[0-9a-fA-F]+$/.test(cleanHex) || cleanHex.length % 2 !== 0) {
+      throw new Error('Invalid hex string');
+    }
+    const bytes = new Uint8Array(cleanHex.length / 2);
+    for (let i = 0; i < cleanHex.length; i += 2) {
+      bytes[i / 2] = parseInt(cleanHex.substr(i, 2), 16);
+    }
+    return bytes;
+  };
+
+  const convertHexToBase58 = (e: any) => {
+    const hex = hexToUint8Array("010301f4190e00000000000a640001066401021b6402030010640300521f00000000000077e2a2c7700e1b40c0")
+    const buffer = bs58.encode(hex)
+    console.log(buffer.toString())
+    return buffer.toString()
+  }
+
   if (firstVar === "")
     return <>Loading...</>
 
@@ -62,16 +105,20 @@ function App() {
                 data-bs-toggle="tab">Home</a>
             </li>
             <li className="nav-item">
-              <a href="#tabs-program-ex1" className="nav-link"
-                data-bs-toggle="tab">Program</a>
+              <a href="#tabs-decompile-ex1" className="nav-link"
+                data-bs-toggle="tab">Decompiler</a>
             </li>
             <li className="nav-item">
               <a href="#tabs-anchor-ex1" className="nav-link"
-                data-bs-toggle="tab">Anchor</a>
+                data-bs-toggle="tab">Anchor IDL Guesser</a>
             </li>
             <li className="nav-item">
-              <a href="#tabs-sbpf-ex1" className="nav-link"
-                data-bs-toggle="tab">sBPF</a>
+              <a href="#tabs-flipside-ex1" className="nav-link"
+                data-bs-toggle="tab">Flipside</a>
+            </li>
+            <li className="nav-item">
+              <a href="#tabs-converter-ex1" className="nav-link"
+                data-bs-toggle="tab">Converters</a>
             </li>
             <li className="nav-item">
               <a href="#tabs-settings-ex1" className="nav-link"
@@ -99,7 +146,7 @@ function App() {
                 <li>https://solana.com/docs/intro/installation</li>
               </div>
             </div>
-            <div className="tab-pane" id="tabs-program-ex1">
+            <div className="tab-pane" id="tabs-decompile-ex1">
               <div className="card">
                 <div className="card-body">
                   <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
@@ -111,25 +158,62 @@ function App() {
               </div>
             </div>
             <div className="tab-pane" id="tabs-anchor-ex1">
-              <h4>Anchor Program?</h4>
-              <div>
-                Fringilla egestas nunc quis tellus diam rhoncus ultricies tristique
-                enim at diam, sem nunc
-                amet, pellentesque id egestas velit sed
+              <div className='card'>
+                <div className='card-header'>
+                  <div className='card-title'>
+                    IDL Guesser...
+                  </div>
+                  <br />
+                  <div className='text-secondary'>
+                    - Only works if it is compiled with Anchor...
+                  </div>
+                </div>
+                <div className="card-body">
+                  <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
+                  <input type="submit" className="btn btn-primary" value="Decompile!" onClick={submitTokenAddress} />
+                </div>
+                <div className="card">
+                  <textarea className="w-full card-body" id="tinymce-default" name="tinymce-default" value={programDump} />
+                </div>
               </div>
             </div>
-            <div className="tab-pane" id="tabs-sbpf-ex1">
-              <h4>eBPF OpCodes</h4>
-              <div>
-                Fringilla egestas nunc quis tellus diam rhoncus ultricies tristique
-                enim at diam, sem nunc
-                amet, pellentesque id egestas velit sed
+            <div className="tab-pane" id="tabs-flipside-ex1">
+              <div className='card'>
+                <div className="card-body">
+                  <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
+                  <input type="submit" className="btn btn-primary" value="Get Last 20 Transactions..." onClick={submitTokenAddress} />
+                </div>
+              </div>
+            </div>
+            <div className="tab-pane" id="tabs-converter-ex1">
+              <div className='card'>
+                <div className='card-header'>
+                  base58 to hex
+                </div>
+                <div className='card-body'>
+                  <input type="text" className="form-control" onChange={updateFlipsideKey} placeholder="xxxx" />
+                  <button type="button" className="btn btn-primary" onClick={convertBase58ToHex} value="Convert!"/>
+                </div>
+              </div>
+              <div className='card'>
+                <div className='card-header'>
+                  hex to base58
+                </div>
+                <div className='card-body'>
+                  <input type="text" className="form-control" onChange={updateFlipsideKey} placeholder="xxxx" />
+                  <button type="button" className="btn btn-primary" onClick={convertHexToBase58} value="Convert!"/>
+                </div>
               </div>
             </div>
             <div className="tab-pane" id="tabs-settings-ex1">
               <h4>Settings tab</h4>
-              <div>
-                API Keys
+              <div className='card'>
+                <div className='card-header'>
+                  Flipside API Key
+                </div>
+                <div className='card-body'>
+                  <input type="password" className="form-control" onChange={updateFlipsideKey} placeholder="xxxx" />
+                </div>
               </div>
             </div>
           </div>
