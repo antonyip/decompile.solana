@@ -37,8 +37,7 @@ function App() {
 
   useEffect(() => {
     console.log(tokenAddressTrigger)
-    if (tokenAddressTrigger.length >= 43)
-    {
+    if (tokenAddressTrigger.length >= 43) {
       axios.get(`https://decompile.solana.home.antonyip.com/get_program_dump/${tokenAddressTrigger}`).then(resp => {
         if (firstRun) {
           setProgramDump(resp.data)
@@ -50,11 +49,10 @@ function App() {
 
   useEffect(() => {
     console.log(tokenAddressTrigger2)
-    if (tokenAddressTrigger2.length >= 43)
-    {
+    if (tokenAddressTrigger2.length >= 43) {
       axios.get(`https://decompile.solana.home.antonyip.com/idl_guesser/${tokenAddressTrigger2}`).then(resp => {
         if (firstRun) {
-          setProgramDump2(JSON.stringify(resp.data,null,2))
+          setProgramDump2(JSON.stringify(resp.data, null, 2))
           //console.log(resp.data)
         }
       })
@@ -82,7 +80,7 @@ function App() {
     setFlipsideAPIKey(e.target.value)
   }
 
-  const uint8ArrayToHex = (uint8Array: Uint8Array)  => {
+  const uint8ArrayToHex = (uint8Array: Uint8Array) => {
     let hex = '';
     for (const byte of uint8Array) {
       hex += byte.toString(16).padStart(2, '0'); // Convert to 2-digit hex
@@ -106,7 +104,7 @@ function App() {
     }
     const bytes = new Uint8Array(cleanHex.length / 2);
     for (let i = 0; i < cleanHex.length; i += 2) {
-      bytes[i / 2] = parseInt(cleanHex.substring(i, i+2), 16);
+      bytes[i / 2] = parseInt(cleanHex.substring(i, i + 2), 16);
     }
     return bytes;
   };
@@ -118,11 +116,11 @@ function App() {
     setBase58StringResult(buffer.toString())
   }
 
-  const updateHexString = (e:any) => {
+  const updateHexString = (e: any) => {
     setHexString(e.target.value)
   }
 
-  const updateBase58String = (e:any) => {
+  const updateBase58String = (e: any) => {
     setBase58String(e.target.value)
   }
 
@@ -160,10 +158,6 @@ function App() {
             <li className="nav-item">
               <a href="#tabs-converter-ex1" className="nav-link"
                 data-bs-toggle="tab">Converters</a>
-            </li>
-            <li className="nav-item">
-              <a href="#tabs-settings-ex1" className="nav-link"
-                data-bs-toggle="tab">Settings</a>
             </li>
           </ul>
         </div>
@@ -221,12 +215,7 @@ function App() {
               </div>
             </div>
             <div className="tab-pane" id="tabs-flipside-ex1">
-              <div className='card'>
-                <div className="card-body">
-                  <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
-                  <input type="submit" className="btn btn-primary" value="Get Last 20 Transactions..." onClick={submitTokenAddress} />
-                </div>
-              </div>
+              <a href="https://flipsidecrypto.xyz/Antonidas/last-20-txs---takes-about-5-minutes-for-a-query..-mpVqgj">Flipside Dashboard to get latest 20 txs</a>
             </div>
             <div className="tab-pane" id="tabs-converter-ex1">
               <div className='card'>
