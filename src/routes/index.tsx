@@ -219,12 +219,12 @@ function App() {
               </div>
             </div>
             <div className="tab-pane" id="tabs-flipside-ex1">
-              <a href="https://flipsidecrypto.xyz/Antonidas/last-20-txs---takes-about-5-minutes-for-a-query..-mpVqgj">Flipside Dashboard to get latest 20 txs</a>
+              <a href="https://flipsidecrypto.xyz/Antonidas/last-20-txs-of-a-program-mpVqgj">Flipside Dashboard to get latest 20 txs</a>
             </div>
             <div className="tab-pane" id="tabs-converter-ex1">
               <div className='card'>
                 <div className='card-header'>
-                  base58 to hex
+                  Base58 to Hexadecimal
                 </div>
                 <div className='card-body'>
                   <input type="text" className="form-control" onChange={updateBase58String} placeholder="6xmki5RtGNHrfhTiHFfp9k3RQ9t8qgL1cYP2YCG2h179" />
@@ -234,7 +234,7 @@ function App() {
               </div>
               <div className='card'>
                 <div className='card-header'>
-                  hex to base58
+                  Hexadecimal to Base58
                 </div>
                 <div className='card-body'>
                   <input type="text" className="form-control" onChange={updateHexString} placeholder="5893fb6fe7d46c834cd4e33e42edcda984914aa9dfeff81d96f029368a804454" />
