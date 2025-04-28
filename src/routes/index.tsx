@@ -180,6 +180,10 @@ function App() {
                 <li>https://releases.llvm.org/19.1.0/docs/index.html</li>
                 <li>https://solana.com/docs/intro/installation</li>
               </div>
+              <div className="card-body">
+                <h4>Source Code</h4>
+                <li>https://github.com/antonyip/decompile.solana</li>
+              </div>
             </div>
             <div className="tab-pane" id="tabs-decompile-ex1">
               <div className="card">
