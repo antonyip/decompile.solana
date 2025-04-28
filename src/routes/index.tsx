@@ -9,11 +9,42 @@ export const Route = createFileRoute('/')({
 function App() {
 
   const [firstVar, setFirstVar] = useState("")
+  const [tokenAddress, setTokenAddress] = useState("6xmki5RtGNHrfhTiHFfp9k3RQ9t8qgL1cYP2YCG2h179")
+  const [tokenAddressTrigger, setTokenAddressTrigger] = useState("")
+  const [programDump, setProgramDump] = useState("Decompiled Program appears here...")
+  const [firstRun, setFirstRun] = useState(false)
+
   useEffect(() => {
     axios.get("https://decompile.solana.home.antonyip.com").then(resp => {
       setFirstVar(resp.data)
     })
   }, [])
+
+  useEffect(() => {
+    //axios.get(`https://decompile.solana.home.antonyip.com/get_program_dump/${tokenAddressTrigger}`).then(resp => {
+    axios.get(`https://decompile.solana.home.antonyip.com`).then(resp => {
+      if (firstRun) {
+        var uuid = crypto.randomUUID()
+        setProgramDump(uuid)
+        console.log(uuid)
+      }
+    })
+  }, [tokenAddressTrigger])
+
+  const doNothing = () => {
+    return
+  }
+
+
+  const updateProgramAddress = (e: any) => {
+    setTokenAddress(e.target.value)
+  }
+
+  const submitTokenAddress = (e: any) => {
+    setFirstRun(true)
+    setTokenAddressTrigger(tokenAddress)
+    console.log(tokenAddress)
+  }
 
   if (firstVar === "")
     return <>Loading...</>
@@ -24,7 +55,7 @@ function App() {
     <div><br />
       <div className="card">
         <div className="card-body">
-        Solana Decompiler Toolkit - by Antonidas
+          Solana Decompiler Toolkit - by Antonidas
         </div>
       </div>
       <div className="card">
@@ -73,11 +104,14 @@ function App() {
               </div>
             </div>
             <div className="tab-pane" id="tabs-program-ex1">
-              <h4>Program ID</h4>
-              <div>
-                Fringilla egestas nunc quis tellus diam rhoncus ultricies tristique
-                enim at diam, sem nunc
-                amet, pellentesque id egestas velit sed
+              <div className="card">
+                <div className="card-body">
+                  <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
+                  <input type="submit" className="btn btn-primary" value="Decompile!" onClick={submitTokenAddress} />
+                </div>
+              </div>
+              <div className="card">
+                <textarea className="w-full card-body" id="tinymce-default" name="tinymce-default" value={programDump} />
               </div>
             </div>
             <div className="tab-pane" id="tabs-anchor-ex1">
