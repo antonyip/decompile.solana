@@ -10,9 +10,14 @@ export const Route = createFileRoute('/')({
 function App() {
 
   const [firstVar, setFirstVar] = useState("")
-  const [tokenAddress, setTokenAddress] = useState("6xmki5RtGNHrfhTiHFfp9k3RQ9t8qgL1cYP2YCG2h179")
-  const [tokenAddressTrigger, setTokenAddressTrigger] = useState("")
+  const [tokenAddress, setTokenAddress] = useState("MarBmsSgKXdrN1egZf5sqe1TMai9K1rChYNDJgjq7aD")
+
   const [programDump, setProgramDump] = useState("Decompiled Program appears here...")
+  const [tokenAddressTrigger, setTokenAddressTrigger] = useState("")
+
+  const [programDump2, setProgramDump2] = useState("Decompiled Program appears here...")
+  const [tokenAddressTrigger2, setTokenAddressTrigger2] = useState("")
+
   const [firstRun, setFirstRun] = useState(false)
   const [flipsideAPIKey, setFlipsideAPIKey] = useState("")
 
@@ -31,15 +36,30 @@ function App() {
   }, [])
 
   useEffect(() => {
-    //axios.get(`https://decompile.solana.home.antonyip.com/get_program_dump/${tokenAddressTrigger}`).then(resp => {
-    axios.get(`https://decompile.solana.home.antonyip.com`).then(resp => {
-      if (firstRun) {
-        var uuid = crypto.randomUUID()
-        setProgramDump(uuid)
-        console.log(resp)
-      }
-    })
+    console.log(tokenAddressTrigger)
+    if (tokenAddressTrigger.length >= 43)
+    {
+      axios.get(`https://decompile.solana.home.antonyip.com/get_program_dump/${tokenAddressTrigger}`).then(resp => {
+        if (firstRun) {
+          setProgramDump(resp.data)
+          //console.log(resp.data)
+        }
+      })
+    }
   }, [tokenAddressTrigger])
+
+  useEffect(() => {
+    console.log(tokenAddressTrigger2)
+    if (tokenAddressTrigger2.length >= 43)
+    {
+      axios.get(`https://decompile.solana.home.antonyip.com/idl_guesser/${tokenAddressTrigger2}`).then(resp => {
+        if (firstRun) {
+          setProgramDump2(JSON.stringify(resp.data,null,2))
+          //console.log(resp.data)
+        }
+      })
+    }
+  }, [tokenAddressTrigger2])
 
 
   const updateProgramAddress = (e: any) => {
@@ -49,6 +69,12 @@ function App() {
   const submitTokenAddress = (e: any) => {
     setFirstRun(true)
     setTokenAddressTrigger(tokenAddress)
+    console.log(e.target.value)
+  }
+
+  const submitTokenAddress2 = (e: any) => {
+    setFirstRun(true)
+    setTokenAddressTrigger2(tokenAddress)
     console.log(e.target.value)
   }
 
@@ -88,7 +114,7 @@ function App() {
   const convertHexToBase58 = () => {
     const hex = hexToUint8Array(hexString)
     const buffer = bs58.encode(hex)
-    console.log(buffer.toString())
+    //console.log(buffer.toString())
     setBase58StringResult(buffer.toString())
   }
 
@@ -164,12 +190,12 @@ function App() {
             <div className="tab-pane" id="tabs-decompile-ex1">
               <div className="card">
                 <div className="card-body">
-                  <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
+                  <input type="text" className="form-control" onChange={updateProgramAddress} defaultValue={tokenAddress} placeholder="Program Address" />
                   <input type="submit" className="btn btn-primary" value="Decompile!" onClick={submitTokenAddress} />
                 </div>
               </div>
               <div className="card">
-                <textarea className="w-full card-body" id="tinymce-default" name="tinymce-default" value={programDump} />
+                <textarea className="form-control w-full h-80 card-body" data-bs-toggle="autosize" value={programDump} />
               </div>
             </div>
             <div className="tab-pane" id="tabs-anchor-ex1">
@@ -185,10 +211,12 @@ function App() {
                 </div>
                 <div className="card-body">
                   <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
-                  <input type="submit" className="btn btn-primary" value="Decompile!" onClick={submitTokenAddress} />
+                  <input type="submit" className="btn btn-primary" value="Decompile!" onClick={submitTokenAddress2} />
                 </div>
                 <div className="card">
-                  <textarea className="w-full card-body" id="tinymce-default" name="tinymce-default" value={programDump} />
+                  <div className="card-body">
+                    <textarea className="form-control w-full h-80" data-bs-toggle="autosize" value={programDump2} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -206,9 +234,9 @@ function App() {
                   base58 to hex
                 </div>
                 <div className='card-body'>
-                  <input type="text" className="form-control" onChange={updateBase58String} placeholder="xxxx" />
+                  <input type="text" className="form-control" onChange={updateBase58String} placeholder="6xmki5RtGNHrfhTiHFfp9k3RQ9t8qgL1cYP2YCG2h179" />
                   <button type="button" className="btn btn-primary" onClick={convertBase58ToHex} value="Convert!">Convert</button>
-                  <input type="text" className="form-control readonly" value={hexStringResult} placeholder="xxxx" />
+                  <input type="text" className="form-control readonly" value={hexStringResult} placeholder="output" />
                 </div>
               </div>
               <div className='card'>
@@ -216,9 +244,9 @@ function App() {
                   hex to base58
                 </div>
                 <div className='card-body'>
-                  <input type="text" className="form-control" onChange={updateHexString} placeholder="xxxx" />
+                  <input type="text" className="form-control" onChange={updateHexString} placeholder="5893fb6fe7d46c834cd4e33e42edcda984914aa9dfeff81d96f029368a804454" />
                   <button type="button" className="btn btn-primary" onClick={convertHexToBase58} value="Convert!">Convert</button>
-                  <input type="text" className="form-control readonly" value={base58StringResult} placeholder="xxxx" />
+                  <input type="text" className="form-control readonly" value={base58StringResult} placeholder="output" />
                 </div>
               </div>
             </div>
