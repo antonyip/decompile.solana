@@ -17,6 +17,13 @@ function App() {
   const [flipsideAPIKey, setFlipsideAPIKey] = useState("")
 
 
+  const [base58String, setBase58String] = useState("")
+  const [hexString, setHexString] = useState("")
+
+  const [base58StringResult, setBase58StringResult] = useState("")
+  const [hexStringResult, setHexStringResult] = useState("")
+
+
   useEffect(() => {
     axios.get("https://decompile.solana.home.antonyip.com").then(resp => {
       setFirstVar(resp.data)
@@ -58,14 +65,14 @@ function App() {
   }
 
   const convertBase58ToHex = () => {
-    const buffer = bs58.decode("2TDMjY92zstsN9CoCAhAbtPUwhCJNSnJdhDybThtdfFzFJjsy8pLBfcd6Nzyu")
+    const buffer = bs58.decode(base58String)
     const rv = uint8ArrayToHex(buffer)
     console.log(rv)
-    return rv
+    setHexStringResult(rv)
   }
 
   // Convert hex string to Uint8Array
-  const hexToUint8Array = (hex: String) => {
+  const hexToUint8Array = (hex: string) => {
     // Remove any '0x' prefix if present
     const cleanHex = hex.replace(/^0x/, '');
     if (!/^[0-9a-fA-F]+$/.test(cleanHex) || cleanHex.length % 2 !== 0) {
@@ -73,22 +80,30 @@ function App() {
     }
     const bytes = new Uint8Array(cleanHex.length / 2);
     for (let i = 0; i < cleanHex.length; i += 2) {
-      bytes[i / 2] = parseInt(cleanHex.substr(i, 2), 16);
+      bytes[i / 2] = parseInt(cleanHex.substring(i, i+2), 16);
     }
     return bytes;
   };
 
   const convertHexToBase58 = () => {
-    const hex = hexToUint8Array("010301f4190e00000000000a640001066401021b6402030010640300521f00000000000077e2a2c7700e1b40c0")
+    const hex = hexToUint8Array(hexString)
     const buffer = bs58.encode(hex)
     console.log(buffer.toString())
-    return buffer.toString()
+    setBase58StringResult(buffer.toString())
+  }
+
+  const updateHexString = (e:any) => {
+    setHexString(e.target.value)
+  }
+
+  const updateBase58String = (e:any) => {
+    setBase58String(e.target.value)
   }
 
   if (firstVar === "")
     return <>Loading...</>
 
-  console.log(flipsideAPIKey)
+  console.log(flipsideAPIKey, base58String, hexString)
 
   return (
     <div><br />
@@ -191,8 +206,9 @@ function App() {
                   base58 to hex
                 </div>
                 <div className='card-body'>
-                  <input type="text" className="form-control" onChange={updateFlipsideKey} placeholder="xxxx" />
-                  <button type="button" className="btn btn-primary" onClick={convertBase58ToHex} value="Convert!"/>
+                  <input type="text" className="form-control" onChange={updateBase58String} placeholder="xxxx" />
+                  <button type="button" className="btn btn-primary" onClick={convertBase58ToHex} value="Convert!">Convert</button>
+                  <input type="text" className="form-control readonly" value={hexStringResult} placeholder="xxxx" />
                 </div>
               </div>
               <div className='card'>
@@ -200,8 +216,9 @@ function App() {
                   hex to base58
                 </div>
                 <div className='card-body'>
-                  <input type="text" className="form-control" onChange={updateFlipsideKey} placeholder="xxxx" />
-                  <button type="button" className="btn btn-primary" onClick={convertHexToBase58} value="Convert!"/>
+                  <input type="text" className="form-control" onChange={updateHexString} placeholder="xxxx" />
+                  <button type="button" className="btn btn-primary" onClick={convertHexToBase58} value="Convert!">Convert</button>
+                  <input type="text" className="form-control readonly" value={base58StringResult} placeholder="xxxx" />
                 </div>
               </div>
             </div>
