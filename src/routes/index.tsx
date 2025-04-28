@@ -19,8 +19,6 @@ function App() {
   const [tokenAddressTrigger2, setTokenAddressTrigger2] = useState("")
 
   const [firstRun, setFirstRun] = useState(false)
-  const [flipsideAPIKey, setFlipsideAPIKey] = useState("")
-
 
   const [base58String, setBase58String] = useState("")
   const [hexString, setHexString] = useState("")
@@ -48,7 +46,7 @@ function App() {
   }, [tokenAddressTrigger])
 
   useEffect(() => {
-    console.log(tokenAddressTrigger2)
+    //console.log(tokenAddressTrigger2)
     if (tokenAddressTrigger2.length >= 43) {
       axios.get(`https://decompile.solana.home.antonyip.com/idl_guesser/${tokenAddressTrigger2}`).then(resp => {
         if (firstRun) {
@@ -74,10 +72,6 @@ function App() {
     setFirstRun(true)
     setTokenAddressTrigger2(tokenAddress)
     console.log(e.target.value)
-  }
-
-  const updateFlipsideKey = (e: any) => {
-    setFlipsideAPIKey(e.target.value)
   }
 
   const uint8ArrayToHex = (uint8Array: Uint8Array) => {
@@ -127,7 +121,7 @@ function App() {
   if (firstVar === "")
     return <>Loading...</>
 
-  console.log(flipsideAPIKey, base58String, hexString)
+  console.log(base58String, hexString)
 
   return (
     <div><br />
@@ -208,7 +202,7 @@ function App() {
                   </div>
                 </div>
                 <div className="card-body">
-                  <input type="text" className="form-control" onChange={updateProgramAddress} placeholder="Program Address" />
+                  <input type="text" className="form-control" onChange={updateProgramAddress} defaultValue={tokenAddress} placeholder="Program Address" />
                   <input type="submit" className="btn btn-primary" value="Decompile!" onClick={submitTokenAddress2} />
                 </div>
                 <div className="card">
@@ -240,17 +234,6 @@ function App() {
                   <input type="text" className="form-control" onChange={updateHexString} placeholder="5893fb6fe7d46c834cd4e33e42edcda984914aa9dfeff81d96f029368a804454" />
                   <button type="button" className="btn btn-primary" onClick={convertHexToBase58} value="Convert!">Convert</button>
                   <input type="text" className="form-control readonly" value={base58StringResult} placeholder="output" />
-                </div>
-              </div>
-            </div>
-            <div className="tab-pane" id="tabs-settings-ex1">
-              <h4>Settings tab</h4>
-              <div className='card'>
-                <div className='card-header'>
-                  Flipside API Key
-                </div>
-                <div className='card-body'>
-                  <input type="password" className="form-control" onChange={updateFlipsideKey} placeholder="xxxx" />
                 </div>
               </div>
             </div>
