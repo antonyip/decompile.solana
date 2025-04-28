@@ -57,7 +57,7 @@ function App() {
     return hex;
   }
 
-  const convertBase58ToHex = (e: any) => {
+  const convertBase58ToHex = () => {
     const buffer = bs58.decode("2TDMjY92zstsN9CoCAhAbtPUwhCJNSnJdhDybThtdfFzFJjsy8pLBfcd6Nzyu")
     const rv = uint8ArrayToHex(buffer)
     console.log(rv)
@@ -78,7 +78,7 @@ function App() {
     return bytes;
   };
 
-  const convertHexToBase58 = (e: any) => {
+  const convertHexToBase58 = () => {
     const hex = hexToUint8Array("010301f4190e00000000000a640001066401021b6402030010640300521f00000000000077e2a2c7700e1b40c0")
     const buffer = bs58.encode(hex)
     console.log(buffer.toString())
@@ -88,7 +88,7 @@ function App() {
   if (firstVar === "")
     return <>Loading...</>
 
-  //console.log(firstVar)
+  console.log(flipsideAPIKey)
 
   return (
     <div><br />
