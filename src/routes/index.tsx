@@ -26,14 +26,10 @@ function App() {
       if (firstRun) {
         var uuid = crypto.randomUUID()
         setProgramDump(uuid)
-        console.log(uuid)
+        console.log(resp)
       }
     })
   }, [tokenAddressTrigger])
-
-  const doNothing = () => {
-    return
-  }
 
 
   const updateProgramAddress = (e: any) => {
@@ -43,7 +39,7 @@ function App() {
   const submitTokenAddress = (e: any) => {
     setFirstRun(true)
     setTokenAddressTrigger(tokenAddress)
-    console.log(tokenAddress)
+    console.log(e.target.value)
   }
 
   if (firstVar === "")
